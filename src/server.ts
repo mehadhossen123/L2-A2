@@ -1,11 +1,12 @@
-import express, { type Application } from 'express'
-import config from './config'
-const app:Application=express()
-const port=config.port;
+import app from "./app/app";
+import config from "./config";
+import { initDb } from "./db/db";
 
-
-
-// here we have to start te server 
-app.listen(port,()=>{
-    console.log(`the server is running on port :${port}`)
-})
+export const main = () => {
+  // here we have to start te server
+  initDb();
+  app.listen(config.port, () => {
+    console.log(`the server is running on port :${config.port}`);
+  });
+};
+main()
