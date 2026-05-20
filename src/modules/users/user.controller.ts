@@ -12,8 +12,8 @@ const userSignup=async(req:Request,res:Response)=>{
     
     
    } catch (error:any) {
-    res.status(200).json({
-      success: true,
+    res.status(500).json({
+      success:false,
       message:error.message,
       data:null,
     });
