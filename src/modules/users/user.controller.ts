@@ -1,6 +1,8 @@
 import type { Request, Response } from "express";
 import { userService } from "./user.service";
 
+
+// user signup 
 const userSignup=async(req:Request,res:Response)=>{
    try {
     const result=await userService.signUpUserIntoDb(req.body)
@@ -22,6 +24,27 @@ const userSignup=async(req:Request,res:Response)=>{
 
 }
 
+// user login 
+const userLogin=async(req:Request,res:Response)=>{
+    const {email,password}=req.body;
+    try {
+      const result = await userService.loginUserIntoDb(email as string,password as string);
+      res.status(200).json({
+        success: true,
+        message: "user login successfully",
+        data:result,
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        message: error.message,
+        data:null,
+      });
+    }
+
+}
+
 export const userController={
     userSignup,
+    userLogin,
 }
