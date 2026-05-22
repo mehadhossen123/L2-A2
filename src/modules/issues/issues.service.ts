@@ -103,8 +103,31 @@ const getSingleIssuesFromDb=async(id:any)=>{
     
 }
 
+
+// delete single issues 
+const updateSingleIssuesFromDb = async (payload:any,id: any) => {
+  //akhane first a ami akta initial query nilam
+  const {title,description,type}=payload
+
+  const result = await pool.query(
+    `
+            UPDATE issues SET title=$1,description=$2,type=$3 WHERE id=$4 RETURNING *
+            `,
+    [title, description, type, id],
+  );
+  console.log(result);
+
+  return result;
+  
+  
+
+ 
+
+};
+
 export const issuesService={
     createIssuesIntoDb,
     getAllIssuesFromDb,
     getSingleIssuesFromDb,
+   updateSingleIssuesFromDb,
 }
