@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import type { TIssue } from "../../type/type";
 import { issuesService } from "./issues.service";
+import { handleRequestResponse, handleResponseError } from "../../utility/handleError";
 
 // create issue
 const createIssue = async (req: Request, res: Response) => {
@@ -11,17 +12,19 @@ const createIssue = async (req: Request, res: Response) => {
       currentUser as TIssue,
       req.body,
     );
-    res.status(200).json({
-      success: true,
-      message: "issue created successfully",
-      data: result.rows[0],
-    });
+   
+
+  handleRequestResponse(
+    res,
+    true,
+    "issue created successfully",
+    result.rows[0],
+    200,
+  );
+
+
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-      data: null,
-    });
+   handleResponseError(res,error)
   }
 };
 
@@ -36,17 +39,17 @@ const getAllIssues = async (req: Request, res: Response) => {
       status as string,
     );
 
-    res.status(200).json({
-      success: true,
-      message: "issue get successfully",
-      data: result,
-    });
+    
+  handleRequestResponse(
+    res,
+    true,
+    "issue get successfully",
+    result,
+    200,
+  );
+
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-      data: null,
-    });
+     handleResponseError(res, error);
   }
 };
 
@@ -60,17 +63,15 @@ const getSingleIssues = async (req: Request, res: Response) => {
 
     const result = await issuesService.getSingleIssuesFromDb(id);
 
-    res.status(200).json({
-      success: true,
-      message: "issue get successfully",
-      data: result,
-    });
+    handleRequestResponse(
+      res,
+      true,
+      "issue get successfully",
+      result,
+      200,
+    );
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-      data: null,
-    });
+     handleResponseError(res, error);
   }
 };
 
@@ -81,17 +82,15 @@ const updateSingleIssues = async (req: Request, res: Response) => {
 
     const result = await issuesService.updateSingleIssuesFromDb(req.body, id);
 
-    res.status(200).json({
-      success: true,
-      message: "Issue update successfully",
-      data: result.rows[0],
-    });
+    handleRequestResponse(
+      res,
+      true,
+      "issue updated successfully",
+      result.rows[0],
+      200,
+    );
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-      data: null,
-    });
+     handleResponseError(res, error);
   }
 };
 
@@ -102,17 +101,23 @@ const deleteSingleIssues = async (req: Request, res: Response) => {
 
     const result = await issuesService.deleteSingleIssuesFromDb(id);
 
-    res.status(200).json({
-      success: true,
-      message: "Issue deleted successfully",
+    // res.status(200).json({
+    //   success: true,
+    //   message: "Issue deleted successfully",
       
-    });
+    // });
+    handleRequestResponse(
+      res,
+      true,
+      "issue deleted successfully",
+      null,
+    
+      200,
+    );
+
+
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-      data: null,
-    });
+     handleResponseError(res, error);
   }
 };
 

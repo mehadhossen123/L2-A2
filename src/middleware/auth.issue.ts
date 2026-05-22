@@ -182,6 +182,13 @@ export const deleteIssueAuth=()=>{
     }
 
     // deleted all issues because he is maintainer
+if (currentUserRole !="maintainer") {
+  return res.status(401).json({
+    success:false,
+    message:"Unauthorized access !!"
+  });
+}
+
     if (currentUserRole == "maintainer") {
       return next();
     }
