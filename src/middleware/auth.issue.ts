@@ -4,7 +4,7 @@ import config from "../config";
 import { pool } from "../db/db";
 
 // issue created validation is here
-export const isAuthenticated = () => {
+export const createIssueAuth = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
     if (!token) {
@@ -49,12 +49,12 @@ export const isAuthenticated = () => {
 };
 
 // issues updated validation is here
-
-export const createIssueAuth = () => {
+export const updatedIssueAuth = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
+    const issueId = req.params.id;
     if (!token) {
-      res.status(401).json({
+      return res.status(401).json({
         success: false,
         message: "Unauthorized access !!",
       });
@@ -72,24 +72,61 @@ export const createIssueAuth = () => {
         `,
       [decodedToken?.email],
     );
-    const user = existsUser.rows[0];
+
     if (existsUser.rows.length == 0) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         message: "User not found in database !!",
       });
     }
 
-    if (
-      !user?.role.includes("contributor") &&
-      !user?.role.includes("maintainer")
-    ) {
-      res.status(403).json({
+    const currentUser = existsUser.rows[0];
+    const currentUserId = currentUser.id;
+    const currentUserRole = currentUser.role;
+    const currentUserIssue = await pool.query(
+      `
+  SELECT *FROM issues WHERE id=$1
+  `,
+      [issueId],
+    );
+
+    if (!currentUserIssue.rows[0]) {
+      return res.status(404).json({
         success: false,
-        message: "Forbidden !!",
+        message: "Issues not found",
       });
     }
-    req.user = decodedToken;
-    next();
+
+    // updated all issues because he is maintainer
+    if (currentUserRole == "maintainer") {
+      return next();
+    }
+
+    {
+      // id na mille
+      if (
+        currentUserIssue.rows[0].reporter_id !== currentUserId &&
+        currentUserIssue.rows[0].status == "open"
+      ) {
+        return res.status(404).json({
+          message: "this is not your issues",
+        });
+      }
+      //  status open na hole
+
+      if (currentUserRole == "contributor") {
+        if (
+          currentUserIssue.rows[0].reporter_id == currentUserId &&
+          currentUserIssue.rows[0].status == "open"
+        ) {
+          return next();
+        }
+      }
+
+      return res.status(403).json({
+        success: false,
+        message: "forbidden",
+      });
+    }
   };
 };

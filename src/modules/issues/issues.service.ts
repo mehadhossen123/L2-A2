@@ -115,7 +115,7 @@ const updateSingleIssuesFromDb = async (payload:any,id: any) => {
             `,
     [title, description, type, id],
   );
-  console.log(result);
+
 
   return result;
   
