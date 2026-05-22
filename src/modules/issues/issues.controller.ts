@@ -25,89 +25,101 @@ const createIssue = async (req: Request, res: Response) => {
   }
 };
 
+// get all issue by filtering type,status
+const getAllIssues = async (req: Request, res: Response) => {
+  try {
+    const { sort, type, status } = req.query;
 
+    const result = await issuesService.getAllIssuesFromDb(
+      sort as string,
+      type as string,
+      status as string,
+    );
 
-
-// get all issue by filtering type,status 
-const getAllIssues=async(req:Request,res:Response)=>{
-    try {
-    const {sort,type,status}=req.query;
-   
-
-      const result = await issuesService.getAllIssuesFromDb(sort as string,type as string,status as string) 
-     
-      res.status(200).json({
-        success: true,
-        message: "issue get successfully",
-        data:result,
-      });
-    } catch (error: any) {
-      res.status(500).json({
-        success: false,
-        message: error.message,
-        data: null,
-      });
-    }
-
-}
+    res.status(200).json({
+      success: true,
+      message: "issue get successfully",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
+  }
+};
 
 // get all single issue
 
-// get all issue by filtering type,status 
-const getSingleIssues=async(req:Request,res:Response)=>{
-    try {
-    const id=req?.params?.id;
-    console.log("requeste id ",id);
-   
+// get all issue by filtering type,status
+const getSingleIssues = async (req: Request, res: Response) => {
+  try {
+    const id = req?.params?.id;
+    console.log("requeste id ", id);
 
-      const result = await issuesService.getSingleIssuesFromDb(id )
-     
-      res.status(200).json({
-        success: true,
-        message: "issue get successfully",
-        data:result,
-      });
-    } catch (error: any) {
-      res.status(500).json({
-        success: false,
-        message: error.message,
-        data: null,
-      });
-    }
+    const result = await issuesService.getSingleIssuesFromDb(id);
 
-}
+    res.status(200).json({
+      success: true,
+      message: "issue get successfully",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
+  }
+};
 
+// update  single issues
+const updateSingleIssues = async (req: Request, res: Response) => {
+  try {
+    const id = req?.params?.id;
 
+    const result = await issuesService.updateSingleIssuesFromDb(req.body, id);
 
-// update  single issues 
-const updateSingleIssues=async(req:Request,res:Response)=>{
-    try {
-    const id=req?.params?.id;
-    
-   
+    res.status(200).json({
+      success: true,
+      message: "Issue update successfully",
+      data: result.rows[0],
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
+  }
+};
 
-      const result = await issuesService.updateSingleIssuesFromDb(req.body,id )
-     
-      res.status(200).json({
-        success: true,
-        message: "Issue update successfully",
-        data:result.rows[0],
-      });
-    } catch (error: any) {
-      res.status(500).json({
-        success: false,
-        message: error.message,
-        data: null,
-      });
-    }
+// delete a single issue
+const deleteSingleIssues = async (req: Request, res: Response) => {
+  try {
+    const id = req?.params?.id;
 
-}
+    const result = await issuesService.deleteSingleIssuesFromDb(id);
 
+    res.status(200).json({
+      success: true,
+      message: "Issue deleted successfully",
+      
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
+  }
+};
 
-
-export const issuesController={
-    createIssue,
-    getAllIssues,
-    getSingleIssues,
-    updateSingleIssues,
-}
+export const issuesController = {
+  createIssue,
+  getAllIssues,
+  getSingleIssues,
+  updateSingleIssues,
+  deleteSingleIssues,
+};

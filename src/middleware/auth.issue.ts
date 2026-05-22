@@ -130,3 +130,60 @@ export const updatedIssueAuth = () => {
     }
   };
 };
+
+
+// issues deleted validation 
+export const deleteIssueAuth=()=>{
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.headers.authorization;
+    const issueId = req.params.id;
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized access !!",
+      });
+    }
+    //khane asle tar mane token ase . tai token take decoded korbo  dekbo lok ta balid kina
+    
+    const decodedToken = Jwt.verify(
+      token as string,
+      config.access_token_key as string,
+    ) as JwtPayload;
+    //  akhon dekbo ai email diye user ta ki database a ase kina.
+    const existsUser = await pool.query(
+      `
+        SELECT *FROM users WHERE email=$1
+        `,
+      [decodedToken?.email],
+    );
+
+    if (existsUser.rows.length == 0) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found in database !!",
+      });
+    }
+
+    const currentUser = existsUser.rows[0];
+   
+    const currentUserRole = currentUser.role;
+    const currentUserIssue = await pool.query(
+      `
+  SELECT *FROM issues WHERE id=$1
+  `,
+      [issueId],
+    );
+
+    if (!currentUserIssue.rows[0]) {
+      return res.status(404).json({
+        success: false,
+        message: "Issues not found",
+      });
+    }
+
+    // deleted all issues because he is maintainer
+    if (currentUserRole == "maintainer") {
+      return next();
+    }
+}
+}

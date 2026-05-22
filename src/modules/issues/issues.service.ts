@@ -104,7 +104,7 @@ const getSingleIssuesFromDb=async(id:any)=>{
 }
 
 
-// delete single issues 
+// update single issues 
 const updateSingleIssuesFromDb = async (payload:any,id: any) => {
   //akhane first a ami akta initial query nilam
   const {title,description,type}=payload
@@ -125,9 +125,29 @@ const updateSingleIssuesFromDb = async (payload:any,id: any) => {
 
 };
 
+
+// update single issues 
+const deleteSingleIssuesFromDb = async (id: any) => {
+  //akhane first a ami akta initial query nilam
+ 
+
+  const result = await pool.query(
+    ` DELETE FROM issues  WHERE id=$1 RETURNING * `,
+    [ id]
+  );
+
+
+  return result;
+  
+  
+
+ 
+
+};
 export const issuesService={
     createIssuesIntoDb,
     getAllIssuesFromDb,
     getSingleIssuesFromDb,
    updateSingleIssuesFromDb,
+   deleteSingleIssuesFromDb,
 }
