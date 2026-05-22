@@ -1,7 +1,7 @@
 
 import config from "../../config";
 import { pool } from "../../db/db";
-import type { TIssue, User } from "../../type/type";
+import type {  User } from "../../type/type";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
@@ -47,23 +47,11 @@ return {accessToken,user}
 
 }
 
-// create issues into database  
-const createIssuesIntoDb=async(payload:TIssue,body :any)=>{
-    const {title,description,type}=body;
-    // create issue 
-    const result = await pool.query(`
-       INSERT INTO issues(title,description,type,reporter_id) 
-        VALUES($1,$2,$3,$4)
-        RETURNING *
-        `,[title,description,type,payload?.id]);
 
-return result
-
-}
 
 
 export const userService = {
   signUpUserIntoDb,
   loginUserIntoDb,
-  createIssuesIntoDb
+ 
 };
