@@ -6,10 +6,17 @@ import express, {
 import { userRouter } from "../modules/users/user.router";
 import error from "../globalError/error";
 import { issuesRouter } from "../modules/issues/issues.router";
+import cors from 'cors'
 
 const app: Application = express();
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  }),
+);
+
 
 
 
