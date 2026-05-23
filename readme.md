@@ -8,7 +8,7 @@ This system allows contributors and maintainers to create, manage, update, and t
 
 ## Live URL
 
-https://your-project.vercel.app
+https://assignment-2-sigma-nine.vercel.app
 
 
 ## Features
