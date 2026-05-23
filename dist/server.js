@@ -6,7 +6,7 @@
 
   
 
-// src/app/app.ts
+// src/app.ts
 import express from "express";
 
 // src/modules/users/user.router.ts
@@ -531,7 +531,7 @@ router2.patch("/:id", updatedIssueAuth(), issuesController.updateSingleIssues);
 router2.delete("/:id", deleteIssueAuth(), issuesController.deleteSingleIssues);
 var issuesRouter = router2;
 
-// src/app/app.ts
+// src/app.ts
 import cors from "cors";
 var app = express();
 app.use(express.json());
@@ -549,14 +549,9 @@ app.use(error_default);
 var app_default = app;
 
 // src/server.ts
-var main = () => {
-  initDb();
-  app_default.listen(config_default.port, () => {
-    console.log(`the server is running on port :${config_default.port}`);
-  });
-};
-main();
+initDb();
+var server_default = app_default;
 export {
-  main
+  server_default as default
 };
-//# sourceMappingURL=server.mjs.map
+//# sourceMappingURL=server.js.map

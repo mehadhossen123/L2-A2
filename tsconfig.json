@@ -9,7 +9,9 @@
     // See also https://aka.ms/tsconfig/module
     "module": "esnext",
     "target": "esnext",
+    // "moduleResolution": "bundler",
     "types": ["node"],
+    
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
@@ -41,7 +43,7 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "app"],
 
   "exclude": []
 }

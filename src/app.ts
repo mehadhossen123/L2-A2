@@ -3,9 +3,9 @@ import express, {
   type Request,
   type Response,
 } from "express";
-import { userRouter } from "../modules/users/user.router";
-import error from "../globalError/error";
-import { issuesRouter } from "../modules/issues/issues.router";
+import { userRouter } from "../src/modules/users/user.router";
+import error from "../src/globalError/error";
+import { issuesRouter } from "../src/modules/issues/issues.router";
 import cors from 'cors'
 
 const app: Application = express();
